@@ -8,25 +8,25 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class GherkinChangeUtil {
-  @NotNull
-  public static GherkinStep createStep(final String text, final Project project) {
-    final GherkinFile dummyFile = createDummyFile(project,
-                                                  "Feature: Dummy\n" +
-                                                  "  Scenario: Dummy\n" +
-                                                  "    " + text
-    );
+    @NotNull
+    public static GherkinStep createStep(final String text, final Project project) {
+        final GherkinFile dummyFile = createDummyFile(project,
+                "Feature: Dummy\n" +
+                        "  Scenario: Dummy\n" +
+                        "    " + text
+        );
 
-    final PsiElement feature = dummyFile.getFirstChild();
-    assert feature != null;
-    final GherkinScenario scenario = PsiTreeUtil.getChildOfType(feature, GherkinScenario.class);
-    assert scenario != null;
-    final GherkinStep element = PsiTreeUtil.getChildOfType(scenario, GherkinStep.class);
-    assert element != null;
-    return element;
-  }
+        final PsiElement feature = dummyFile.getFirstChild();
+        assert feature != null;
+        final GherkinScenario scenario = PsiTreeUtil.getChildOfType(feature, GherkinScenario.class);
+        assert scenario != null;
+        final GherkinStep element = PsiTreeUtil.getChildOfType(scenario, GherkinStep.class);
+        assert element != null;
+        return element;
+    }
 
-  public static GherkinFile createDummyFile(Project project, String text) {
-    final String fileName = "dummy." + GherkinFileType.INSTANCE.getDefaultExtension();
-    return (GherkinFile)PsiFileFactory.getInstance(project).createFileFromText(fileName, GherkinLanguage.INSTANCE, text);
-  }
+    public static GherkinFile createDummyFile(Project project, String text) {
+        final String fileName = "dummy." + GherkinFileType.INSTANCE.getDefaultExtension();
+        return (GherkinFile) PsiFileFactory.getInstance(project).createFileFromText(fileName, GherkinLanguage.INSTANCE, text);
+    }
 }

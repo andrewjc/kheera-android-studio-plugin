@@ -10,28 +10,28 @@ import javax.swing.*;
  * @author yole
  */
 public class GherkinFileType extends LanguageFileType {
-  public static final GherkinFileType INSTANCE = new GherkinFileType();
+    public static final GherkinFileType INSTANCE = new GherkinFileType();
 
-  protected GherkinFileType() {
-    super(GherkinLanguage.INSTANCE);
-  }
+    protected GherkinFileType() {
+        super(GherkinLanguage.INSTANCE);
+    }
 
-  @NotNull
-  public String getName() {
-    return "Cucumber";
-  }
+    @NotNull
+    public String getName() {
+        return "Cucumber";
+    }
 
-  @NotNull
-  public String getDescription() {
-    return "Cucumber scenario files";
-  }
+    @NotNull
+    public String getDescription() {
+        return "Cucumber scenario files";
+    }
 
-  @NotNull
-  public String getDefaultExtension() {
-    return "feature";
-  }
+    @NotNull
+    public String getDefaultExtension() {
+        return "feature";
+    }
 
-  public Icon getIcon() {
-    return CucumberIcons.Cucumber;
-  }
+    public Icon getIcon() {
+        return CucumberIcons.Cucumber;
+    }
 }

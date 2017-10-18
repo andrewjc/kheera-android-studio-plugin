@@ -8,9 +8,9 @@ import java.util.List;
  * @author yole
  */
 public interface GherkinFile extends PsiFile {
-  List<String> getStepKeywords();
+    List<String> getStepKeywords();
 
-  String getLocaleLanguage();
+    String getLocaleLanguage();
 
-  GherkinFeature[] getFeatures();
+    GherkinFeature[] getFeatures();
 }

@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
  * @author Ilya.Kazakevich
  */
 public interface OptionalStepDefinitionExtensionPoint extends CucumberJvmExtensionPoint {
-  /**
-   * Participate in steps definition creation or not
-   *
-   * @param anchor gherkin step or gherkin file, or some other element pointing to context when this method is called
-   * @return participate or not
-   */
-  boolean participateInStepDefinitionCreation(@NotNull PsiElement anchor);
+    /**
+     * Participate in steps definition creation or not
+     *
+     * @param anchor gherkin step or gherkin file, or some other element pointing to context when this method is called
+     * @return participate or not
+     */
+    boolean participateInStepDefinitionCreation(@NotNull PsiElement anchor);
 }

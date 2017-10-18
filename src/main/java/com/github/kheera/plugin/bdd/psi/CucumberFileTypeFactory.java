@@ -1,14 +1,14 @@
 package com.github.kheera.plugin.bdd.psi;
 
-import com.intellij.openapi.fileTypes.FileTypeFactory;
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author yole
  */
 public class CucumberFileTypeFactory extends FileTypeFactory {
-  public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-    consumer.consume(GherkinFileType.INSTANCE, "feature");
-  }
+    public void createFileTypes(@NotNull FileTypeConsumer consumer) {
+        consumer.consume(GherkinFileType.INSTANCE, "feature");
+    }
 }

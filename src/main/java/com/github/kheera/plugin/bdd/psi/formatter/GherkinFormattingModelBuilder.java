@@ -18,16 +18,16 @@ import org.jetbrains.annotations.NotNull;
  * @author yole
  */
 public class GherkinFormattingModelBuilder implements FormattingModelBuilder {
-  @NotNull
-  public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
-    final PsiFile file = element.getContainingFile();
-    final FileElement fileElement = TreeUtil.getFileElement((TreeElement)SourceTreeToPsiMap.psiElementToTree(element));
-    final GherkinBlock rootBlock = new GherkinBlock(fileElement);
-    //FormattingModelDumper.dumpFormattingModel(rootBlock, 0, System.out);
-    return new DocumentBasedFormattingModel(rootBlock, file.getProject(), settings, file.getFileType(), file);
-  }
+    @NotNull
+    public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
+        final PsiFile file = element.getContainingFile();
+        final FileElement fileElement = TreeUtil.getFileElement((TreeElement) SourceTreeToPsiMap.psiElementToTree(element));
+        final GherkinBlock rootBlock = new GherkinBlock(fileElement);
+        //FormattingModelDumper.dumpFormattingModel(rootBlock, 0, System.out);
+        return new DocumentBasedFormattingModel(rootBlock, file.getProject(), settings, file.getFileType(), file);
+    }
 
-  public TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
-    return null;
-  }
+    public TextRange getRangeAffectingIndent(PsiFile file, int offset, ASTNode elementAtOffset) {
+        return null;
+    }
 }

@@ -11,31 +11,31 @@ import org.jetbrains.annotations.NotNull;
  * @author yole
  */
 public class RemoveTableColumnFix implements LocalQuickFix {
-  private final GherkinTable myTable;
-  private final int myColumnIndex;
+    private final GherkinTable myTable;
+    private final int myColumnIndex;
 
-  public RemoveTableColumnFix(GherkinTable table, int columnIndex) {
-    myTable = table;
-    myColumnIndex = columnIndex;
-  }
-
-  @NotNull
-  public String getName() {
-    return "Remove unused column";
-  }
-
-  @NotNull
-  public String getFamilyName() {
-    return "RemoveTableColumnFix";
-  }
-
-  public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-    final GherkinTableRow headerRow = myTable.getHeaderRow();
-    if (headerRow != null) {
-      headerRow.deleteCell(myColumnIndex);
+    public RemoveTableColumnFix(GherkinTable table, int columnIndex) {
+        myTable = table;
+        myColumnIndex = columnIndex;
     }
-    for (GherkinTableRow row : myTable.getDataRows()) {
-      row.deleteCell(myColumnIndex);
+
+    @NotNull
+    public String getName() {
+        return "Remove unused column";
     }
-  }
+
+    @NotNull
+    public String getFamilyName() {
+        return "RemoveTableColumnFix";
+    }
+
+    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        final GherkinTableRow headerRow = myTable.getHeaderRow();
+        if (headerRow != null) {
+            headerRow.deleteCell(myColumnIndex);
+        }
+        for (GherkinTableRow row : myTable.getDataRows()) {
+            row.deleteCell(myColumnIndex);
+        }
+    }
 }

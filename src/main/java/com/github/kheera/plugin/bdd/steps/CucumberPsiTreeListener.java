@@ -12,47 +12,47 @@ import java.util.Map;
 
 public class CucumberPsiTreeListener extends PsiTreeChangeAdapter {
 
-  private Map<PsiElement, ChangesWatcher> changesWatchersMap;
+    private Map<PsiElement, ChangesWatcher> changesWatchersMap;
 
-  public CucumberPsiTreeListener() {
-    changesWatchersMap = new HashMap<>();
-  }
-
-  public void addChangesWatcher(final PsiElement parent, final ChangesWatcher changesWatcher) {
-    changesWatchersMap.put(parent, changesWatcher);
-  }
-
-  private void processChange(final PsiElement parent) {
-    for (Map.Entry<PsiElement, ChangesWatcher> entry : changesWatchersMap.entrySet()) {
-      if (PsiTreeUtil.isAncestor(entry.getKey(), parent, false)) {
-        entry.getValue().onChange(parent);
-      }
+    public CucumberPsiTreeListener() {
+        changesWatchersMap = new HashMap<>();
     }
-  }
 
-  @Override
-  public void childAdded(@NotNull PsiTreeChangeEvent event) {
-    processChange(event.getParent());
-  }
+    public void addChangesWatcher(final PsiElement parent, final ChangesWatcher changesWatcher) {
+        changesWatchersMap.put(parent, changesWatcher);
+    }
 
-  public void childRemoved(@NotNull final PsiTreeChangeEvent event) {
-    processChange(event.getParent());
-  }
+    private void processChange(final PsiElement parent) {
+        for (Map.Entry<PsiElement, ChangesWatcher> entry : changesWatchersMap.entrySet()) {
+            if (PsiTreeUtil.isAncestor(entry.getKey(), parent, false)) {
+                entry.getValue().onChange(parent);
+            }
+        }
+    }
 
-  public void childReplaced(@NotNull final PsiTreeChangeEvent event) {
-    processChange(event.getParent());
-  }
+    @Override
+    public void childAdded(@NotNull PsiTreeChangeEvent event) {
+        processChange(event.getParent());
+    }
 
-  public void childrenChanged(@NotNull final PsiTreeChangeEvent event) {
-    processChange(event.getParent());
-  }
+    public void childRemoved(@NotNull final PsiTreeChangeEvent event) {
+        processChange(event.getParent());
+    }
 
-  public void childMoved(@NotNull final PsiTreeChangeEvent event) {
-    processChange(event.getOldParent());
-    processChange(event.getNewParent());
-  }
+    public void childReplaced(@NotNull final PsiTreeChangeEvent event) {
+        processChange(event.getParent());
+    }
 
-  public interface ChangesWatcher {
-    void onChange(final PsiElement parentPsiElement);
-  }
+    public void childrenChanged(@NotNull final PsiTreeChangeEvent event) {
+        processChange(event.getParent());
+    }
+
+    public void childMoved(@NotNull final PsiTreeChangeEvent event) {
+        processChange(event.getOldParent());
+        processChange(event.getNewParent());
+    }
+
+    public interface ChangesWatcher {
+        void onChange(final PsiElement parentPsiElement);
+    }
 }

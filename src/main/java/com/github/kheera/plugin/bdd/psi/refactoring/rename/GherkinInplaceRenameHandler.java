@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GherkinInplaceRenameHandler extends VariableInplaceRenameHandler {
-  @Override
-  protected boolean isAvailable(PsiElement element, Editor editor, PsiFile file) {
-    return element instanceof GherkinStepParameter || element instanceof GherkinTableCell;
-  }
+    @Override
+    protected boolean isAvailable(PsiElement element, Editor editor, PsiFile file) {
+        return element instanceof GherkinStepParameter || element instanceof GherkinTableCell;
+    }
 
-  @Nullable
-  @Override
-  protected VariableInplaceRenamer createRenamer(@NotNull PsiElement elementToRename, Editor editor) {
-    return new GherkinInplaceRenamer((PsiNamedElement)elementToRename, editor);
-  }
+    @Nullable
+    @Override
+    protected VariableInplaceRenamer createRenamer(@NotNull PsiElement elementToRename, Editor editor) {
+        return new GherkinInplaceRenamer((PsiNamedElement) elementToRename, editor);
+    }
 }

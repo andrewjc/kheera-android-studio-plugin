@@ -1,7 +1,9 @@
 package com.github.kheera.plugin.bdd.steps.reference;
 
 import com.github.kheera.plugin.bdd.CucumberJvmExtensionPoint;
+import com.github.kheera.plugin.bdd.psi.impl.GherkinStepImpl;
 import com.github.kheera.plugin.bdd.steps.AbstractStepDefinition;
+import com.github.kheera.plugin.bdd.steps.CucumberStepsIndex;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -11,8 +13,6 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.github.kheera.plugin.bdd.psi.impl.GherkinStepImpl;
-import com.github.kheera.plugin.bdd.steps.CucumberStepsIndex;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,106 +23,106 @@ import java.util.List;
  */
 public class CucumberStepReference implements PsiPolyVariantReference {
 
-  private final PsiElement myStep;
-  private final TextRange myRange;
+    private final PsiElement myStep;
+    private final TextRange myRange;
 
-  public CucumberStepReference(PsiElement step, TextRange range) {
-    myStep = step;
-    myRange = range;
-  }
-
-  public PsiElement getElement() {
-    return myStep;
-  }
-
-  public TextRange getRangeInElement() {
-    return myRange;
-  }
-
-  public PsiElement resolve() {
-    final ResolveResult[] result = multiResolve(true);
-    return result.length == 1 ? result[0].getElement() : null;
-  }
-
-  @NotNull
-  public String getCanonicalText() {
-    return myStep.getText();
-  }
-
-  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    return myStep;
-  }
-
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-    return myStep;
-  }
-
-  public boolean isReferenceTo(PsiElement element) {
-    ResolveResult[] resolvedResults = multiResolve(false);
-    for (ResolveResult rr : resolvedResults) {
-      if (getElement().getManager().areElementsEquivalent(rr.getElement(), element)) {
-        return true;
-      }
+    public CucumberStepReference(PsiElement step, TextRange range) {
+        myStep = step;
+        myRange = range;
     }
-    return false;
-  }
 
-  @NotNull
-  public Object[] getVariants() {
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
+    public PsiElement getElement() {
+        return myStep;
+    }
 
-  public boolean isSoft() {
-    return false;
-  }
+    public TextRange getRangeInElement() {
+        return myRange;
+    }
 
-  @NotNull
-  @Override
-  public ResolveResult[] multiResolve(boolean incompleteCode) {
-    final List<ResolveResult> result = new ArrayList<>();
-    final List<PsiElement> resolvedElements = new ArrayList<>();
+    public PsiElement resolve() {
+        final ResolveResult[] result = multiResolve(true);
+        return result.length == 1 ? result[0].getElement() : null;
+    }
 
-    final CucumberJvmExtensionPoint[] extensionList = Extensions.getExtensions(CucumberJvmExtensionPoint.EP_NAME);
-    for (CucumberJvmExtensionPoint e : extensionList) {
-      final List<PsiElement> extensionResult = e.resolveStep(myStep);
-      for (final PsiElement element : extensionResult) {
-        if (element != null && !resolvedElements.contains(element)) {
-          resolvedElements.add(element);
-          result.add(new ResolveResult() {
-            @Override
-            public PsiElement getElement() {
-              return element;
+    @NotNull
+    public String getCanonicalText() {
+        return myStep.getText();
+    }
+
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        return myStep;
+    }
+
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        return myStep;
+    }
+
+    public boolean isReferenceTo(PsiElement element) {
+        ResolveResult[] resolvedResults = multiResolve(false);
+        for (ResolveResult rr : resolvedResults) {
+            if (getElement().getManager().areElementsEquivalent(rr.getElement(), element)) {
+                return true;
             }
-
-            @Override
-            public boolean isValidResult() {
-              return true;
-            }
-          });
         }
-      }
+        return false;
     }
 
-    return result.toArray(new ResolveResult[result.size()]);
-  }
+    @NotNull
+    public Object[] getVariants() {
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    }
 
-  /**
-   * @return first definition (if any) or null if no definition found
-   * @see #resolveToDefinitions()
-   */
-  @Nullable
-  public AbstractStepDefinition resolveToDefinition() {
-    final Collection<AbstractStepDefinition> definitions = resolveToDefinitions();
-    return (definitions.isEmpty() ? null : definitions.iterator().next());
-  }
+    public boolean isSoft() {
+        return false;
+    }
 
-  /**
-   * @return step definitions
-   * @see #resolveToDefinition()
-   */
-  @NotNull
-  public Collection<AbstractStepDefinition> resolveToDefinitions() {
-    final CucumberStepsIndex index = CucumberStepsIndex.getInstance(myStep.getProject());
-    return index.findStepDefinitions(myStep.getContainingFile(), ((GherkinStepImpl)myStep));
-  }
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        final List<ResolveResult> result = new ArrayList<>();
+        final List<PsiElement> resolvedElements = new ArrayList<>();
+
+        final CucumberJvmExtensionPoint[] extensionList = Extensions.getExtensions(CucumberJvmExtensionPoint.EP_NAME);
+        for (CucumberJvmExtensionPoint e : extensionList) {
+            final List<PsiElement> extensionResult = e.resolveStep(myStep);
+            for (final PsiElement element : extensionResult) {
+                if (element != null && !resolvedElements.contains(element)) {
+                    resolvedElements.add(element);
+                    result.add(new ResolveResult() {
+                        @Override
+                        public PsiElement getElement() {
+                            return element;
+                        }
+
+                        @Override
+                        public boolean isValidResult() {
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
+
+        return result.toArray(new ResolveResult[result.size()]);
+    }
+
+    /**
+     * @return first definition (if any) or null if no definition found
+     * @see #resolveToDefinitions()
+     */
+    @Nullable
+    public AbstractStepDefinition resolveToDefinition() {
+        final Collection<AbstractStepDefinition> definitions = resolveToDefinitions();
+        return (definitions.isEmpty() ? null : definitions.iterator().next());
+    }
+
+    /**
+     * @return step definitions
+     * @see #resolveToDefinition()
+     */
+    @NotNull
+    public Collection<AbstractStepDefinition> resolveToDefinitions() {
+        final CucumberStepsIndex index = CucumberStepsIndex.getInstance(myStep.getProject());
+        return index.findStepDefinitions(myStep.getContainingFile(), ((GherkinStepImpl) myStep));
+    }
 }

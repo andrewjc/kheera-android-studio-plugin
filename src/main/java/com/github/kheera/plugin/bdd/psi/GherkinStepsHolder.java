@@ -7,12 +7,12 @@ import org.jetbrains.annotations.NotNull;
  * @date Aug 22, 2009
  */
 public interface GherkinStepsHolder extends GherkinPsiElement, GherkinSuppressionHolder {
-  GherkinStepsHolder[] EMPTY_ARRAY = new GherkinStepsHolder[0];
+    GherkinStepsHolder[] EMPTY_ARRAY = new GherkinStepsHolder[0];
 
-  String getScenarioName();
+    String getScenarioName();
 
-  @NotNull
-  GherkinStep[] getSteps();
+    @NotNull
+    GherkinStep[] getSteps();
 
-  GherkinTag[] getTags();
+    GherkinTag[] getTags();
 }

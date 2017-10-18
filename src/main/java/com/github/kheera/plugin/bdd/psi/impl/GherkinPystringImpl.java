@@ -6,17 +6,17 @@ import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 public class GherkinPystringImpl extends GherkinPsiElementBase implements GherkinPystring {
-  public GherkinPystringImpl(@NotNull final ASTNode node) {
-    super(node);
-  }
+    public GherkinPystringImpl(@NotNull final ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
-    gherkinElementVisitor.visitPystring(this);
-  }
+    @Override
+    protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
+        gherkinElementVisitor.visitPystring(this);
+    }
 
-  @Override
-  public String toString() {
-    return "GherkinPystring";
-  }
+    @Override
+    public String toString() {
+        return "GherkinPystring";
+    }
 }

@@ -10,45 +10,45 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 
 public class GherkinFindUsagesProvider implements FindUsagesProvider {
-  @Override
-  public WordsScanner getWordsScanner() {
-    return new DefaultWordsScanner(new GherkinLexer(new PlainGherkinKeywordProvider()), TokenSet.EMPTY, TokenSet.EMPTY, TokenSet.EMPTY);
-  }
-
-  @Override
-  public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-    if (psiElement instanceof GherkinStep) {
-      return true;
+    @Override
+    public WordsScanner getWordsScanner() {
+        return new DefaultWordsScanner(new GherkinLexer(new PlainGherkinKeywordProvider()), TokenSet.EMPTY, TokenSet.EMPTY, TokenSet.EMPTY);
     }
 
-    return false;
-  }
+    @Override
+    public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
+        if (psiElement instanceof GherkinStep) {
+            return true;
+        }
 
-  @Override
-  public String getHelpId(@NotNull PsiElement psiElement) {
-    return "reference.dialogs.findUsages.other";
-  }
-
-  @NotNull
-  @Override
-  public String getType(@NotNull PsiElement element) {
-    if (element instanceof GherkinStep) {
-      return CucumberBundle.message("cucumber.step");
-    } else if (element instanceof GherkinStepParameter) {
-      return CucumberBundle.message("cucumber.step.parameter");
+        return false;
     }
-    return element.toString();
-  }
 
-  @NotNull
-  @Override
-  public String getDescriptiveName(@NotNull PsiElement element) {
-    return element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "";
-  }
+    @Override
+    public String getHelpId(@NotNull PsiElement psiElement) {
+        return "reference.dialogs.findUsages.other";
+    }
 
-  @NotNull
-  @Override
-  public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
-    return getDescriptiveName(element);
-  }
+    @NotNull
+    @Override
+    public String getType(@NotNull PsiElement element) {
+        if (element instanceof GherkinStep) {
+            return CucumberBundle.message("cucumber.step");
+        } else if (element instanceof GherkinStepParameter) {
+            return CucumberBundle.message("cucumber.step.parameter");
+        }
+        return element.toString();
+    }
+
+    @NotNull
+    @Override
+    public String getDescriptiveName(@NotNull PsiElement element) {
+        return element instanceof PsiNamedElement ? ((PsiNamedElement) element).getName() : "";
+    }
+
+    @NotNull
+    @Override
+    public String getNodeText(@NotNull PsiElement element, boolean useFullName) {
+        return getDescriptiveName(element);
+    }
 }

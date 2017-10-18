@@ -14,18 +14,18 @@ import org.jetbrains.annotations.NotNull;
  * @date Jun 24, 2009
  */
 public class GherkinLiveTemplateContextType extends TemplateContextType {
-  @NonNls
-  private static final String CONTEXT_NAME = "CUCUMBER_FEATURE_FILE";
+    @NonNls
+    private static final String CONTEXT_NAME = "CUCUMBER_FEATURE_FILE";
 
-  public GherkinLiveTemplateContextType() {
-    super(CONTEXT_NAME, CucumberBundle.message("live.templates.context.cucumber.name"));
-  }
+    public GherkinLiveTemplateContextType() {
+        super(CONTEXT_NAME, CucumberBundle.message("live.templates.context.cucumber.name"));
+    }
 
-  public boolean isInContext(@NotNull final PsiFile file, final int offset) {
-    return file instanceof GherkinFileImpl;
-  }
+    public boolean isInContext(@NotNull final PsiFile file, final int offset) {
+        return file instanceof GherkinFileImpl;
+    }
 
-  public SyntaxHighlighter createHighlighter() {
-    return new GherkinSyntaxHighlighter(new PlainGherkinKeywordProvider());
-  }
+    public SyntaxHighlighter createHighlighter() {
+        return new GherkinSyntaxHighlighter(new PlainGherkinKeywordProvider());
+    }
 }

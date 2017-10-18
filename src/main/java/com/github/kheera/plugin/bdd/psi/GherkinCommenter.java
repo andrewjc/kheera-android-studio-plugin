@@ -11,72 +11,72 @@ import org.jetbrains.annotations.Nullable;
  * @date May 16, 2009
  */
 public class GherkinCommenter implements CodeDocumentationAwareCommenter {
-  @NonNls
-  private static final String LINE_COMMENT_PREFIX = "#";
+    @NonNls
+    private static final String LINE_COMMENT_PREFIX = "#";
 
-  @Nullable
-  public String getLineCommentPrefix() {
-    return LINE_COMMENT_PREFIX;
-  }
+    @Nullable
+    public String getLineCommentPrefix() {
+        return LINE_COMMENT_PREFIX;
+    }
 
-  @Nullable
-  public String getBlockCommentPrefix() {
-    // N/A
-    return null;
-  }
+    @Nullable
+    public String getBlockCommentPrefix() {
+        // N/A
+        return null;
+    }
 
-  @Nullable
-  public String getBlockCommentSuffix() {
-    // N/A
-    return null;
-  }
+    @Nullable
+    public String getBlockCommentSuffix() {
+        // N/A
+        return null;
+    }
 
-  public String getCommentedBlockCommentPrefix() {
-    return null;
-  }
+    public String getCommentedBlockCommentPrefix() {
+        return null;
+    }
 
-  public String getCommentedBlockCommentSuffix() {
-    return null;
-  }
+    public String getCommentedBlockCommentSuffix() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public IElementType getLineCommentTokenType() {
-    return GherkinTokenTypes.COMMENT;
-  }
+    @Nullable
+    @Override
+    public IElementType getLineCommentTokenType() {
+        return GherkinTokenTypes.COMMENT;
+    }
 
-  @Nullable
-  @Override
-  public IElementType getBlockCommentTokenType() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public IElementType getBlockCommentTokenType() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public IElementType getDocumentationCommentTokenType() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public IElementType getDocumentationCommentTokenType() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public String getDocumentationCommentPrefix() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getDocumentationCommentPrefix() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public String getDocumentationCommentLinePrefix() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getDocumentationCommentLinePrefix() {
+        return null;
+    }
 
-  @Nullable
-  @Override
-  public String getDocumentationCommentSuffix() {
-    return null;
-  }
+    @Nullable
+    @Override
+    public String getDocumentationCommentSuffix() {
+        return null;
+    }
 
-  @Override
-  public boolean isDocumentationComment(PsiComment element) {
-    return false;
-  }
+    @Override
+    public boolean isDocumentationComment(PsiComment element) {
+        return false;
+    }
 }

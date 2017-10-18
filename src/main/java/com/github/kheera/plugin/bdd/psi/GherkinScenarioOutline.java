@@ -10,9 +10,9 @@ import java.util.Map;
  * @author yole
  */
 public interface GherkinScenarioOutline extends GherkinStepsHolder {
-  @NotNull
-  List<GherkinExamplesBlock> getExamplesBlocks();
+    @NotNull
+    List<GherkinExamplesBlock> getExamplesBlocks();
 
-  @Nullable
-  Map<String, String> getOutlineTableMap();
+    @Nullable
+    Map<String, String> getOutlineTableMap();
 }

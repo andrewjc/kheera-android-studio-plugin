@@ -12,15 +12,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CucumberAddExamplesColonFix implements LocalQuickFix {
 
-  @NotNull
-  public String getFamilyName() {
-    return "Add missing ':' after examples keyword";
-  }
+    @NotNull
+    public String getFamilyName() {
+        return "Add missing ':' after examples keyword";
+    }
 
 
-  public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-    final PsiElement examples = descriptor.getPsiElement();
-    final PsiElement[] elements = GherkinElementFactory.getTopLevelElements(project, ":");
-    examples.getParent().addAfter(elements[0], examples);
-  }
+    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+        final PsiElement examples = descriptor.getPsiElement();
+        final PsiElement[] elements = GherkinElementFactory.getTopLevelElements(project, ":");
+        examples.getParent().addAfter(elements[0], examples);
+    }
 }

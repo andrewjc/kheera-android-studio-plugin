@@ -1,5 +1,6 @@
 package com.github.kheera.plugin.bdd.psi.impl;
 
+import com.github.kheera.plugin.bdd.psi.GherkinElementFactory;
 import com.github.kheera.plugin.bdd.psi.GherkinElementVisitor;
 import com.github.kheera.plugin.bdd.psi.GherkinStepParameter;
 import com.intellij.lang.ASTNode;
@@ -12,49 +13,48 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.github.kheera.plugin.bdd.psi.GherkinElementFactory;
 
 public class GherkinStepParameterImpl extends GherkinPsiElementBase implements GherkinStepParameter {
-  public GherkinStepParameterImpl(@NotNull final ASTNode node) {
-    super(node);
-  }
+    public GherkinStepParameterImpl(@NotNull final ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
-    gherkinElementVisitor.visitStepParameter(this);
-  }
+    @Override
+    protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
+        gherkinElementVisitor.visitStepParameter(this);
+    }
 
-  @Override
-  public String toString() {
-    return "GherkinStepParameter:" + getText();
-  }
+    @Override
+    public String toString() {
+        return "GherkinStepParameter:" + getText();
+    }
 
-  @Override
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-    final LeafPsiElement content = PsiTreeUtil.getChildOfType(this, LeafPsiElement.class);
-    PsiElement[] elements = GherkinElementFactory.getTopLevelElements(getProject(), name);
-    getNode().replaceChild(content, elements[0].getNode());
-    return this;
-  }
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        final LeafPsiElement content = PsiTreeUtil.getChildOfType(this, LeafPsiElement.class);
+        PsiElement[] elements = GherkinElementFactory.getTopLevelElements(getProject(), name);
+        getNode().replaceChild(content, elements[0].getNode());
+        return this;
+    }
 
-  @Override
-  public PsiReference getReference() {
-    return new GherkinStepParameterReference(this);
-  }
+    @Override
+    public PsiReference getReference() {
+        return new GherkinStepParameterReference(this);
+    }
 
-  @Override
-  public String getName() {
-    return getText();
-  }
+    @Override
+    public String getName() {
+        return getText();
+    }
 
-  @Override
-  public PsiElement getNameIdentifier() {
-    return this;
-  }
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this;
+    }
 
-  @NotNull
-  @Override
-  public SearchScope getUseScope() {
-    return new LocalSearchScope(getContainingFile());
-  }
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+        return new LocalSearchScope(getContainingFile());
+    }
 }

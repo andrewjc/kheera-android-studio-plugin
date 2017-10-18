@@ -10,28 +10,28 @@ import org.jetbrains.annotations.NotNull;
  * @author yole
  */
 public class GherkinScenarioImpl extends GherkinStepsHolderBase implements GherkinScenario {
-  public GherkinScenarioImpl(@NotNull final ASTNode node) {
-    super(node);
-  }
-
-  @Override
-  public String toString() {
-    if (isBackground()) {
-      return "GherkinScenario(Background):";
+    public GherkinScenarioImpl(@NotNull final ASTNode node) {
+        super(node);
     }
-    return "GherkinScenario:" + getScenarioName();
-  }
 
-  public boolean isBackground() {
-    return getNode().getFirstChildNode().getElementType() == GherkinTokenTypes.BACKGROUND_KEYWORD;
-  }
+    @Override
+    public String toString() {
+        if (isBackground()) {
+            return "GherkinScenario(Background):";
+        }
+        return "GherkinScenario:" + getScenarioName();
+    }
 
-  @Override
-  protected String getPresentableText() {
-    return buildPresentableText(isBackground() ? "Background" : "Scenario");
-  }
+    public boolean isBackground() {
+        return getNode().getFirstChildNode().getElementType() == GherkinTokenTypes.BACKGROUND_KEYWORD;
+    }
 
-  protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
-    gherkinElementVisitor.visitScenario(this);
-  }
+    @Override
+    protected String getPresentableText() {
+        return buildPresentableText(isBackground() ? "Background" : "Scenario");
+    }
+
+    protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
+        gherkinElementVisitor.visitScenario(this);
+    }
 }

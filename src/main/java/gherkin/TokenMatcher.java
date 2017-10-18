@@ -1,10 +1,10 @@
 package gherkin;
 
+import gherkin.ast.Location;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import gherkin.ast.Location;
 
 import static gherkin.Parser.ITokenMatcher;
 import static gherkin.Parser.TokenType;

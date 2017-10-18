@@ -13,31 +13,31 @@ import org.jetbrains.annotations.Nullable;
  * @author yole
  */
 public class GherkinExamplesBlockImpl extends GherkinPsiElementBase implements GherkinExamplesBlock {
-  private static final TokenSet TABLE_FILTER = TokenSet.create(GherkinElementTypes.TABLE);
+    private static final TokenSet TABLE_FILTER = TokenSet.create(GherkinElementTypes.TABLE);
 
-  public GherkinExamplesBlockImpl(@NotNull final ASTNode node) {
-    super(node);
-  }
+    public GherkinExamplesBlockImpl(@NotNull final ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  public String toString() {
-    return "GherkinExamplesBlock:" + getElementText();
-  }
+    @Override
+    public String toString() {
+        return "GherkinExamplesBlock:" + getElementText();
+    }
 
-  @Override
-  protected String getPresentableText() {
-    return buildPresentableText("Examples");
-  }
+    @Override
+    protected String getPresentableText() {
+        return buildPresentableText("Examples");
+    }
 
-  protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
-    gherkinElementVisitor.visitExamplesBlock(this);
-  }
+    protected void acceptGherkin(GherkinElementVisitor gherkinElementVisitor) {
+        gherkinElementVisitor.visitExamplesBlock(this);
+    }
 
-  @Nullable
-  public GherkinTable getTable() {
-    final ASTNode node = getNode();
+    @Nullable
+    public GherkinTable getTable() {
+        final ASTNode node = getNode();
 
-    final ASTNode tableNode = node.findChildByType(TABLE_FILTER);
-    return tableNode == null ? null : (GherkinTable)tableNode.getPsi();
-  }
+        final ASTNode tableNode = node.findChildByType(TABLE_FILTER);
+        return tableNode == null ? null : (GherkinTable) tableNode.getPsi();
+    }
 }

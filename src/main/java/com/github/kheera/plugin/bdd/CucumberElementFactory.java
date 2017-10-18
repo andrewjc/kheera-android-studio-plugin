@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class CucumberElementFactory {
 
-  public static PsiElement createTempPsiFile(@NotNull final Project project, @NotNull final String text) {
+    public static PsiElement createTempPsiFile(@NotNull final Project project, @NotNull final String text) {
 
-    return PsiFileFactory.getInstance(project).createFileFromText("temp." + GherkinFileType.INSTANCE.getDefaultExtension(),
-                                                                  GherkinFileType.INSTANCE,
-                                                                  text, LocalTimeCounter.currentTime(), true);
-  }
+        return PsiFileFactory.getInstance(project).createFileFromText("temp." + GherkinFileType.INSTANCE.getDefaultExtension(),
+                GherkinFileType.INSTANCE,
+                text, LocalTimeCounter.currentTime(), true);
+    }
 }

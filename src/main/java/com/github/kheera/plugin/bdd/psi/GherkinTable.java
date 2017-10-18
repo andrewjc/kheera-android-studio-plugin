@@ -9,10 +9,11 @@ import java.util.List;
  * @author yole
  */
 public interface GherkinTable extends GherkinPsiElement {
-  @Nullable
-  GherkinTableRow getHeaderRow();
-  @NotNull
-  List<GherkinTableRow> getDataRows();
+    @Nullable
+    GherkinTableRow getHeaderRow();
 
-  int getColumnWidth(int columnIndex);
+    @NotNull
+    List<GherkinTableRow> getDataRows();
+
+    int getColumnWidth(int columnIndex);
 }

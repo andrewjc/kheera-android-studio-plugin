@@ -3,6 +3,7 @@ package com.github.kheera.plugin.bdd.inspections;
 import com.github.kheera.plugin.bdd.*;
 import com.github.kheera.plugin.bdd.inspections.model.CreateStepDefinitionFileModel;
 import com.github.kheera.plugin.bdd.inspections.ui.CreateStepDefinitionFileDialog;
+import com.github.kheera.plugin.bdd.java.steps.JavaStepDefinitionCreator;
 import com.github.kheera.plugin.bdd.psi.GherkinFile;
 import com.github.kheera.plugin.bdd.psi.GherkinStep;
 import com.github.kheera.plugin.bdd.steps.CucumberStepsIndex;
@@ -42,175 +43,116 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class CucumberCreateStepFixBase implements LocalQuickFix {
-  private static final Logger LOG = Logger.getInstance("#CucumberCreateStepFixBase");
-  protected abstract void createStepOrSteps(GherkinStep step, @Nullable final Pair<PsiFile, BDDFrameworkType> fileAndFrameworkType);
+    private static final Logger LOG = Logger.getInstance("#CucumberCreateStepFixBase");
 
-  @Override
-  public boolean startInWriteAction() {
-    return false;
-  }
+    public static PsiFile getStepDefinitionContainer(@NotNull final GherkinFile featureFile) {
+        final PsiFile result = CucumberStepsIndex.getInstance(featureFile.getProject()).getStepDefinitionContainer(featureFile);
 
-  @NotNull
-  public String getFamilyName() {
-    return getName();
-  }
+        return result;
+    }
 
-  public void applyFix(@NotNull final Project project, @NotNull ProblemDescriptor descriptor) {
-    final GherkinStep step = (GherkinStep)descriptor.getPsiElement();
-    final GherkinFile featureFile = (GherkinFile)step.getContainingFile();
-    // TODO + step defs pairs from other content roots
-    final List<Pair<PsiFile, BDDFrameworkType>> pairs = ContainerUtil.newArrayList(getStepDefinitionContainers(featureFile));
-    if (!pairs.isEmpty()) {
-      pairs.add(0, null);
+    private static void createStepDefinitionFile(final GherkinStep step) {
+        final PsiFile featureFile = step.getContainingFile();
+        assert featureFile != null;
 
-      final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
-      final ListPopup popupStep =
-        popupFactory.createListPopup(new BaseListPopupStep<Pair<PsiFile, BDDFrameworkType>>(
-          CucumberBundle.message("choose.step.definition.file"), ContainerUtil.newArrayList(pairs)) {
-          @Override
-          public boolean isSpeedSearchEnabled() {
-            return true;
-          }
+        final CreateStepDefinitionFileModel model = askUserForFilePath(step);
+        if (model == null) {
+            return;
+        }
+        String filePath = FileUtil.toSystemDependentName(model.getFilePath());
+        final BDDFrameworkType frameworkType = model.getSelectedFileType();
 
-          @NotNull
-          @Override
-          public String getTextFor(Pair<PsiFile, BDDFrameworkType> value) {
-            if (value == null) {
-              return CucumberBundle.message("create.new.file");
+        // show error if file already exists
+        Project project = step.getProject();
+        if (LocalFileSystem.getInstance().findFileByPath(filePath) == null) {
+            final String parentDirPath = model.getDirectory().getVirtualFile().getPath();
+
+            ApplicationManager.getApplication().invokeLater(
+                    () -> CommandProcessor.getInstance().executeCommand(project, () -> {
+                        try {
+                            VirtualFile parentDir = VfsUtil.createDirectories(parentDirPath);
+                            PsiDirectory parentPsiDir = PsiManager.getInstance(project).findDirectory(parentDir);
+                            assert parentPsiDir != null;
+                            PsiFile newFile = CucumberStepsIndex.getInstance(project)
+                                    .createStepDefinitionFile(step.getContainingFile(), model.getDirectory(), model.getFileName(), frameworkType);
+
+                            createStepDefinition(step, newFile);
+                        } catch (IOException e) {
+                            LOG.error(e);
+                        }
+                    }, CucumberBundle.message("cucumber.quick.fix.create.step.command.name.create"), null));
+        } else {
+            Messages.showErrorDialog(project,
+                    CucumberBundle.message("cucumber.quick.fix.create.step.error.already.exist.msg", filePath),
+                    CucumberBundle.message("cucumber.quick.fix.create.step.file.name.title"));
+        }
+    }
+
+    @Nullable
+    private static CreateStepDefinitionFileModel askUserForFilePath(@NotNull final GherkinStep step) {
+        final InputValidator validator = new InputValidator() {
+            public boolean checkInput(final String filePath) {
+                return !StringUtil.isEmpty(filePath);
             }
 
-            final VirtualFile file = value.getFirst().getVirtualFile();
-            assert file != null;
+            public boolean canClose(final String fileName) {
+                return true;
+            }
+        };
 
-            CucumberStepsIndex stepsIndex = CucumberStepsIndex.getInstance(value.getFirst().getProject());
-            StepDefinitionCreator stepDefinitionCreator = stepsIndex.getExtensionMap().get(value.getSecond()).getStepDefinitionCreator();
-            return stepDefinitionCreator.getStepDefinitionFilePath(value.getFirst());
-          }
-
-          @Override
-          public Icon getIconFor(Pair<PsiFile, BDDFrameworkType> value) {
-            return value == null ? AllIcons.Actions.CreateFromUsage : value.getFirst().getIcon(0);
-          }
-
-          @Override
-          public PopupStep onChosen(final Pair<PsiFile, BDDFrameworkType> selectedValue, boolean finalChoice) {
-            return doFinalStep(() -> createStepOrSteps(step, selectedValue));
-          }
-        });
-
-      if (!ApplicationManager.getApplication().isUnitTestMode()) {
-        popupStep.showCenteredInCurrentWindow(step.getProject());
-      } else {
-        createStepOrSteps(step, pairs.get(1));
-      }
-    }
-    else {
-      createFileOrStepDefinition(step, null);
-    }
-  }
-
-  public static Set<Pair<PsiFile, BDDFrameworkType>> getStepDefinitionContainers(@NotNull final GherkinFile featureFile) {
-    final Set<Pair<PsiFile, BDDFrameworkType>> result =
-      CucumberStepsIndex.getInstance(featureFile.getProject()).getStepDefinitionContainers(featureFile);
-
-    CucumberStepsIndex stepsIndex = CucumberStepsIndex.getInstance(featureFile.getProject());
-    for (Pair<PsiFile, BDDFrameworkType> item : result) {
-      if (stepsIndex.getExtensionMap().get(item.getSecond()) == null) {
-        result.remove(item);
-      }
-    }
-
-    return result;
-  }
-
-  private static void createStepDefinitionFile(final GherkinStep step) {
-    final PsiFile featureFile = step.getContainingFile();
-    assert featureFile != null;
-
-    final CreateStepDefinitionFileModel model = askUserForFilePath(step);
-    if (model == null) {
-      return;
-    }
-    String filePath = FileUtil.toSystemDependentName(model.getFilePath());
-    final BDDFrameworkType frameworkType = model.getSelectedFileType();
-
-    // show error if file already exists
-    Project project = step.getProject();
-    if (LocalFileSystem.getInstance().findFileByPath(filePath) == null) {
-      final String parentDirPath = model.getDirectory().getVirtualFile().getPath();
-
-      ApplicationManager.getApplication().invokeLater(
-        () -> CommandProcessor.getInstance().executeCommand(project, () -> {
-          try {
-            VirtualFile parentDir = VfsUtil.createDirectories(parentDirPath);
-            PsiDirectory parentPsiDir = PsiManager.getInstance(project).findDirectory(parentDir);
-            assert parentPsiDir != null;
-            PsiFile newFile = CucumberStepsIndex.getInstance(project)
-              .createStepDefinitionFile(model.getDirectory(), model.getFileName(), frameworkType);
-            Pair<PsiFile, BDDFrameworkType> pair = Pair.create(newFile, frameworkType);
-            createStepDefinition(step, pair);
-          }
-          catch (IOException e) {
-            LOG.error(e);
-          }
-        }, CucumberBundle.message("cucumber.quick.fix.create.step.command.name.create"), null));
-    }
-    else {
-      Messages.showErrorDialog(project,
-                               CucumberBundle.message("cucumber.quick.fix.create.step.error.already.exist.msg", filePath),
-                               CucumberBundle.message("cucumber.quick.fix.create.step.file.name.title"));
-    }
-  }
-
-  protected void createFileOrStepDefinition(final GherkinStep step, @Nullable final Pair<PsiFile, BDDFrameworkType> fileAndFrameworkType) {
-    if (fileAndFrameworkType == null) {
-      createStepDefinitionFile(step);
-    }
-    else {
-      createStepDefinition(step, fileAndFrameworkType);
-    }
-  }
-
-  @Nullable
-  private static CreateStepDefinitionFileModel askUserForFilePath(@NotNull final GherkinStep step) {
-    final InputValidator validator = new InputValidator() {
-      public boolean checkInput(final String filePath) {
-        return !StringUtil.isEmpty(filePath);
-      }
-
-      public boolean canClose(final String fileName) {
-        return true;
-      }
-    };
-
-    Map<BDDFrameworkType, String> supportedFileTypesAndDefaultFileNames = new HashMap<>();
-    Map<BDDFrameworkType, PsiDirectory> fileTypeToDefaultDirectoryMap = new HashMap<>();
-    for (CucumberJvmExtensionPoint e : Extensions.getExtensions(CucumberJvmExtensionPoint.EP_NAME)) {
-      if (e instanceof OptionalStepDefinitionExtensionPoint) {
-        // Skip if framework file creation support is optional
-        if (!((OptionalStepDefinitionExtensionPoint)e).participateInStepDefinitionCreation(step)) {
-          continue;
+        Map<BDDFrameworkType, String> supportedFileTypesAndDefaultFileNames = new HashMap<>();
+        Map<BDDFrameworkType, PsiDirectory> fileTypeToDefaultDirectoryMap = new HashMap<>();
+        for (CucumberJvmExtensionPoint e : Extensions.getExtensions(CucumberJvmExtensionPoint.EP_NAME)) {
+            if (e instanceof OptionalStepDefinitionExtensionPoint) {
+                // Skip if framework file creation support is optional
+                if (!((OptionalStepDefinitionExtensionPoint) e).participateInStepDefinitionCreation(step)) {
+                    continue;
+                }
+            }
+            supportedFileTypesAndDefaultFileNames.put(e.getStepFileType(), e.getStepDefinitionCreator().getDefaultStepFileName(step));
+            fileTypeToDefaultDirectoryMap.put(e.getStepFileType(), e.getStepDefinitionCreator().getDefaultStepDefinitionFolder(step));
         }
-      }
-      supportedFileTypesAndDefaultFileNames.put(e.getStepFileType(), e.getStepDefinitionCreator().getDefaultStepFileName(step));
-      fileTypeToDefaultDirectoryMap.put(e.getStepFileType(), e.getStepDefinitionCreator().getDefaultStepDefinitionFolder(step));
+
+        CreateStepDefinitionFileModel model =
+                new CreateStepDefinitionFileModel(step.getProject(), supportedFileTypesAndDefaultFileNames, fileTypeToDefaultDirectoryMap);
+        CreateStepDefinitionFileDialog createStepDefinitionFileDialog = new CreateStepDefinitionFileDialog(step.getProject(), model, validator);
+        if (createStepDefinitionFileDialog.showAndGet()) {
+            return model;
+        } else {
+            return null;
+        }
     }
 
-    CreateStepDefinitionFileModel model =
-      new CreateStepDefinitionFileModel(step.getProject(), supportedFileTypesAndDefaultFileNames, fileTypeToDefaultDirectoryMap);
-    CreateStepDefinitionFileDialog createStepDefinitionFileDialog = new CreateStepDefinitionFileDialog(step.getProject(), model, validator);
-    if (createStepDefinitionFileDialog.showAndGet()) {
-      return model;
+    private static void createStepDefinition(GherkinStep step, PsiFile file) {
+        StepDefinitionCreator stepDefCreator = new JavaStepDefinitionCreator();
+        WriteCommandAction.runWriteCommandAction(step.getProject(), null, null, () -> stepDefCreator.createStepDefinition(step, file), file);
     }
-    else {
-      return null;
-    }
-  }
 
-  private static void createStepDefinition(GherkinStep step, @NotNull final Pair<PsiFile, BDDFrameworkType> fileAndFrameworkType) {
-    CucumberStepsIndex stepsIndex = CucumberStepsIndex.getInstance(step.getProject());
-    StepDefinitionCreator stepDefCreator = stepsIndex.getExtensionMap().get(fileAndFrameworkType.getSecond()).getStepDefinitionCreator();
-    PsiFile file = fileAndFrameworkType.first;
-    WriteCommandAction.runWriteCommandAction(step.getProject(), null, null, () -> stepDefCreator.createStepDefinition(step, file), file);
-  }
+    @Override
+    public boolean startInWriteAction() {
+        return false;
+    }
+
+    @NotNull
+    public String getFamilyName() {
+        return getName();
+    }
+
+    public void applyFix(@NotNull final Project project, @NotNull ProblemDescriptor descriptor) {
+
+        final GherkinStep step = (GherkinStep) descriptor.getPsiElement();
+        final GherkinFile featureFile = (GherkinFile) step.getContainingFile();
+
+        final PsiFile result = CucumberStepsIndex.getInstance(featureFile.getProject()).getStepDefinitionContainer(featureFile);
+
+        createStepOrSteps(step, result);
+    }
+
+    protected void createStepOrSteps(final GherkinStep step, PsiFile file) {
+        if (file == null) {
+            createStepDefinitionFile(step);
+        } else {
+            createStepDefinition(step, file);
+        }
+    }
 }

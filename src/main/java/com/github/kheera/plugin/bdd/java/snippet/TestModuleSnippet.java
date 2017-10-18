@@ -1,11 +1,9 @@
-package com.github.kheera.plugin.bdd.java.steps;
-
-import com.github.kheera.plugin.bdd.java.snippet.Snippet;
+package com.github.kheera.plugin.bdd.java.snippet;
 
 import java.util.List;
 
-class JavaSnippet implements Snippet {
-    public JavaSnippet() {
+public class TestModuleSnippet implements Snippet {
+    public TestModuleSnippet() {
     }
 
     public String arguments(List<Class<?>> argumentTypes) {

@@ -29,7 +29,9 @@ public class Pickle {
         return locations;
     }
 
-    public List<PickleTag> getTags() { return tags; }
+    public List<PickleTag> getTags() {
+        return tags;
+    }
 
     public String getIdentification() {
         StringBuilder builder = new StringBuilder();

@@ -16,24 +16,24 @@ import org.jetbrains.annotations.NotNull;
  * @author oleg
  */
 public class GherkinSpellcheckerStrategy extends SpellcheckingStrategy {
-  @NotNull
-  @Override
-  public Tokenizer getTokenizer(final PsiElement element) {
-    if (element instanceof LeafElement) {
-      final ASTNode node = element.getNode();
-      if (node != null && node.getElementType() instanceof GherkinElementType){
-        return SpellcheckingStrategy.TEXT_TOKENIZER;
-      }
+    @NotNull
+    @Override
+    public Tokenizer getTokenizer(final PsiElement element) {
+        if (element instanceof LeafElement) {
+            final ASTNode node = element.getNode();
+            if (node != null && node.getElementType() instanceof GherkinElementType) {
+                return SpellcheckingStrategy.TEXT_TOKENIZER;
+            }
+        }
+        return super.getTokenizer(element);
     }
-    return super.getTokenizer(element);
-  }
 
-  @Override
-  public SpellCheckerQuickFix[] getRegularFixes(PsiElement element,
-                                                int offset,
-                                                @NotNull TextRange textRange,
-                                                boolean useRename,
-                                                String wordWithTypo) {
-    return new SpellCheckerQuickFix[]{new ChangeTo(wordWithTypo), new AcceptWordAsCorrect(wordWithTypo)};
-  }
+    @Override
+    public SpellCheckerQuickFix[] getRegularFixes(PsiElement element,
+                                                  int offset,
+                                                  @NotNull TextRange textRange,
+                                                  boolean useRename,
+                                                  String wordWithTypo) {
+        return new SpellCheckerQuickFix[]{new ChangeTo(wordWithTypo), new AcceptWordAsCorrect(wordWithTypo)};
+    }
 }

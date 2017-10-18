@@ -18,35 +18,35 @@ import org.jetbrains.annotations.NotNull;
  * Date: 7/25/12
  */
 public class CucumberJavaStepDefinitionSearch implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters> {
-  @Override
-  public boolean execute(@NotNull final ReferencesSearch.SearchParameters queryParameters,
-                         @NotNull final Processor<PsiReference> consumer) {
-    final PsiElement myElement = queryParameters.getElementToSearch();
-    if (!(myElement instanceof PsiMethod)) {
-      return true;
-    }
-    final PsiMethod method = (PsiMethod)myElement;
-    Boolean isStepDefinition = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        return CucumberJavaUtil.isStepDefinition(method);
-      }
-    });
-    if (!isStepDefinition) {
-      return true;
-    }
+    @Override
+    public boolean execute(@NotNull final ReferencesSearch.SearchParameters queryParameters,
+                           @NotNull final Processor<PsiReference> consumer) {
+        final PsiElement myElement = queryParameters.getElementToSearch();
+        if (!(myElement instanceof PsiMethod)) {
+            return true;
+        }
+        final PsiMethod method = (PsiMethod) myElement;
+        Boolean isStepDefinition = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
+            @Override
+            public Boolean compute() {
+                return CucumberJavaUtil.isStepDefinition(method);
+            }
+        });
+        if (!isStepDefinition) {
+            return true;
+        }
 
-    final PsiAnnotation stepAnnotation = ApplicationManager.getApplication().runReadAction(new Computable<PsiAnnotation>() {
-      @Override
-      public PsiAnnotation compute() {
-        return CucumberJavaUtil.getCucumberStepAnnotation(method);
-      }
-    });
+        final PsiAnnotation stepAnnotation = ApplicationManager.getApplication().runReadAction(new Computable<PsiAnnotation>() {
+            @Override
+            public PsiAnnotation compute() {
+                return CucumberJavaUtil.getCucumberStepAnnotation(method);
+            }
+        });
 
-    final String regexp = CucumberJavaUtil.getPatternFromStepDefinition(stepAnnotation);
-    if (regexp == null) {
-      return true;
+        final String regexp = CucumberJavaUtil.getPatternFromStepDefinition(stepAnnotation);
+        if (regexp == null) {
+            return true;
+        }
+        return CucumberUtil.findGherkinReferencesToElement(myElement, regexp, consumer, queryParameters.getEffectiveSearchScope());
     }
-    return CucumberUtil.findGherkinReferencesToElement(myElement, regexp, consumer, queryParameters.getEffectiveSearchScope());
-  }
 }

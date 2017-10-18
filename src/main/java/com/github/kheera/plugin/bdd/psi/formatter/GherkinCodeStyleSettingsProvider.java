@@ -11,24 +11,24 @@ import org.jetbrains.annotations.NotNull;
  * @author Rustam Vishnyakov
  */
 public class GherkinCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-  @NotNull
-  @Override
-  public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
-    return new CodeStyleAbstractConfigurable(settings, originalSettings, "Gherkin") {
-      @Override
-      protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {
-        return new GherkinCodeStylePanel(getCurrentSettings(), settings);
-      }
+    @NotNull
+    @Override
+    public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
+        return new CodeStyleAbstractConfigurable(settings, originalSettings, "Gherkin") {
+            @Override
+            protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {
+                return new GherkinCodeStylePanel(getCurrentSettings(), settings);
+            }
 
-      @Override
-      public String getHelpTopic() {
-        return "reference.settingsdialog.codestyle.gherkin";
-      }
-    };
-  }
+            @Override
+            public String getHelpTopic() {
+                return "reference.settingsdialog.codestyle.gherkin";
+            }
+        };
+    }
 
-  @Override
-  public String getConfigurableDisplayName() {
-    return "Gherkin";
-  }
+    @Override
+    public String getConfigurableDisplayName() {
+        return "Gherkin";
+    }
 }

@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GherkinInspectionSuppressor implements InspectionSuppressor {
-  @Override
-  public boolean isSuppressedFor(@NotNull PsiElement element, @NotNull String toolId) {
-    return GherkinSuppressionUtil.isSuppressedFor(element, toolId);
-  }
+    @Override
+    public boolean isSuppressedFor(@NotNull PsiElement element, @NotNull String toolId) {
+        return GherkinSuppressionUtil.isSuppressedFor(element, toolId);
+    }
 
-  @NotNull
-  @Override
-  public SuppressQuickFix[] getSuppressActions(@Nullable PsiElement element, @NotNull String toolId) {
-    return GherkinSuppressionUtil.getDefaultSuppressActions(toolId);
-  }
+    @NotNull
+    @Override
+    public SuppressQuickFix[] getSuppressActions(@Nullable PsiElement element, @NotNull String toolId) {
+        return GherkinSuppressionUtil.getDefaultSuppressActions(toolId);
+    }
 }

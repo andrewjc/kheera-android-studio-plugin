@@ -1,8 +1,8 @@
 package com.github.kheera.plugin.bdd.psi.refactoring.rename;
 
 import com.github.kheera.plugin.bdd.CucumberBundle;
-import com.github.kheera.plugin.bdd.steps.reference.CucumberStepReference;
 import com.github.kheera.plugin.bdd.steps.AbstractStepDefinition;
+import com.github.kheera.plugin.bdd.steps.reference.CucumberStepReference;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ReadOnlyFragmentModificationException;
@@ -24,96 +24,96 @@ import java.awt.*;
 import java.util.EnumSet;
 
 public class CucumberStepRenameDialog extends RenameDialog {
-  private AbstractStepDefinition myStepDefinition;
+    private AbstractStepDefinition myStepDefinition;
 
-  public CucumberStepRenameDialog(@NotNull Project project,
-                                  @NotNull PsiElement psiElement,
-                                  @Nullable PsiElement nameSuggestionContext, Editor editor) {
-    super(project, psiElement, nameSuggestionContext, editor);
-  }
+    public CucumberStepRenameDialog(@NotNull Project project,
+                                    @NotNull PsiElement psiElement,
+                                    @Nullable PsiElement nameSuggestionContext, Editor editor) {
+        super(project, psiElement, nameSuggestionContext, editor);
+    }
 
-  @Override
-  protected RenameProcessor createRenameProcessor(String newName) {
-    return new RenameProcessor(getProject(), getPsiElement(), newName, isSearchInComments(),
-                                                          isSearchInNonJavaFiles());
-  }
+    private static void guardRegexpSpecialSymbols(@NotNull final Editor editor) {
+        final String text = editor.getDocument().getText();
+        final RegExpLexer lexer = new RegExpLexer(EnumSet.noneOf(RegExpCapability.class));
 
-  @Override
-  protected String getFullName() {
-    return CucumberBundle.message("cucumber.step");
-  }
-
-  @Override
-  protected void createNewNameComponent() {
-    super.createNewNameComponent();
-
-    final Runnable guardRunnable = () -> {
-      final Editor editor = getNameSuggestionsField().getEditor();
-      if (editor != null) {
-        editor.getSelectionModel().removeSelection();
-        editor.getCaretModel().moveToOffset(0);
-        final Document document = editor.getDocument();
-        EditorActionManager.getInstance().setReadonlyFragmentModificationHandler(document, new ReadonlyFragmentModificationHandler() {
-            @Override
-            public void handle(final ReadOnlyFragmentModificationException e) {
-              //do nothing
+        lexer.start(text);
+        while (lexer.getTokenType() != null) {
+            if (lexer.getTokenType() != RegExpTT.CHARACTER) {
+                editor.getDocument().createGuardedBlock(lexer.getTokenStart(), lexer.getTokenEnd());
             }
-          });
-
-        guardRegexpSpecialSymbols(editor);
-      }
-    };
-
-    SwingUtilities.invokeLater(guardRunnable);
-  }
-
-  private AbstractStepDefinition getStepDefinition() {
-    if (myStepDefinition == null) {
-      final CucumberStepReference ref = CucumberStepRenameProcessor.getCucumberStepReference(getPsiElement());
-      if (ref != null) {
-        myStepDefinition = ref.resolveToDefinition();
-      }
-    }
-    return myStepDefinition;
-  }
-
-  private static void guardRegexpSpecialSymbols(@NotNull final Editor editor) {
-    final String text = editor.getDocument().getText();
-    final RegExpLexer lexer = new RegExpLexer(EnumSet.noneOf(RegExpCapability.class));
-
-    lexer.start(text);
-    while (lexer.getTokenType() != null) {
-      if (lexer.getTokenType() != RegExpTT.CHARACTER) {
-        editor.getDocument().createGuardedBlock(lexer.getTokenStart(), lexer.getTokenEnd());
-      }
-      lexer.advance();
-    }
-  }
-
-  @Override
-  public String[] getSuggestedNames() {
-    AbstractStepDefinition stepDefinition = getStepDefinition();
-    if (stepDefinition != null) {
-      String result = stepDefinition.getCucumberRegex();
-      if (result != null) {
-        result = StringUtil.trimStart(result, "^");
-        result = StringUtil.trimEnd(result, "$");
-
-        return new String[]{result};
-      }
+            lexer.advance();
+        }
     }
 
-    return super.getSuggestedNames();
-  }
+    @Override
+    protected RenameProcessor createRenameProcessor(String newName) {
+        return new RenameProcessor(getProject(), getPsiElement(), newName, isSearchInComments(),
+                isSearchInNonJavaFiles());
+    }
 
-  protected void processNewNameChanged() {
-    getPreviewAction().setEnabled(true);
-    getRefactorAction().setEnabled(true);
-  }
+    @Override
+    protected String getFullName() {
+        return CucumberBundle.message("cucumber.step");
+    }
 
-  @Override
-  protected void createCheckboxes(JPanel panel, GridBagConstraints gbConstraints) {
-    super.createCheckboxes(panel, gbConstraints);
-    getCbSearchInComments().setVisible(false);
-  }
+    @Override
+    protected void createNewNameComponent() {
+        super.createNewNameComponent();
+
+        final Runnable guardRunnable = () -> {
+            final Editor editor = getNameSuggestionsField().getEditor();
+            if (editor != null) {
+                editor.getSelectionModel().removeSelection();
+                editor.getCaretModel().moveToOffset(0);
+                final Document document = editor.getDocument();
+                EditorActionManager.getInstance().setReadonlyFragmentModificationHandler(document, new ReadonlyFragmentModificationHandler() {
+                    @Override
+                    public void handle(final ReadOnlyFragmentModificationException e) {
+                        //do nothing
+                    }
+                });
+
+                guardRegexpSpecialSymbols(editor);
+            }
+        };
+
+        SwingUtilities.invokeLater(guardRunnable);
+    }
+
+    private AbstractStepDefinition getStepDefinition() {
+        if (myStepDefinition == null) {
+            final CucumberStepReference ref = CucumberStepRenameProcessor.getCucumberStepReference(getPsiElement());
+            if (ref != null) {
+                myStepDefinition = ref.resolveToDefinition();
+            }
+        }
+        return myStepDefinition;
+    }
+
+    @Override
+    public String[] getSuggestedNames() {
+        AbstractStepDefinition stepDefinition = getStepDefinition();
+        if (stepDefinition != null) {
+            String result = stepDefinition.getCucumberRegex();
+            if (result != null) {
+                result = StringUtil.trimStart(result, "^");
+                result = StringUtil.trimEnd(result, "$");
+
+                return new String[]{result};
+            }
+        }
+
+        return super.getSuggestedNames();
+    }
+
+    protected void processNewNameChanged() {
+        getPreviewAction().setEnabled(true);
+        getRefactorAction().setEnabled(true);
+    }
+
+    @Override
+    protected void createCheckboxes(JPanel panel, GridBagConstraints gbConstraints) {
+        super.createCheckboxes(panel, gbConstraints);
+        getCbSearchInComments().setVisible(false);
+    }
 }

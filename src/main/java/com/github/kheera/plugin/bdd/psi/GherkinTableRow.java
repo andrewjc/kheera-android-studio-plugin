@@ -6,11 +6,11 @@ import java.util.List;
  * @author yole
  */
 public interface GherkinTableRow extends GherkinPsiElement {
-  GherkinTableRow[] EMPTY_ARRAY = new GherkinTableRow[0];
+    GherkinTableRow[] EMPTY_ARRAY = new GherkinTableRow[0];
 
-  List<GherkinTableCell> getPsiCells();
+    List<GherkinTableCell> getPsiCells();
 
-  int getColumnWidth(int columnIndex);
+    int getColumnWidth(int columnIndex);
 
-  void deleteCell(int columnIndex);
+    void deleteCell(int columnIndex);
 }

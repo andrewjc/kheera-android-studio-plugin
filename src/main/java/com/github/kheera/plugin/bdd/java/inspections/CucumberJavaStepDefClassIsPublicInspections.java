@@ -1,58 +1,58 @@
 package com.github.kheera.plugin.bdd.java.inspections;
 
 import com.github.kheera.plugin.bdd.java.CucumberJavaBundle;
+import com.github.kheera.plugin.bdd.java.CucumberJavaUtil;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ex.BaseLocalInspectionTool;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import com.github.kheera.plugin.bdd.java.CucumberJavaUtil;
 
 /**
  * User: Andrey.Vokin
  * Date: 1/9/13
  */
 public class CucumberJavaStepDefClassIsPublicInspections extends BaseLocalInspectionTool {
-  public boolean isEnabledByDefault() {
-    return true;
-  }
-
-  @Nls
-  @NotNull
-  public String getDisplayName() {
-    return CucumberJavaBundle.message("cucumber.java.inspections.step.def.class.is.public.title");
-  }
-
-  @NotNull
-  public String getShortName() {
-    return "CucumberJavaStepDefClassIsPublic";
-  }
-
-  @NotNull
-  public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-    return new CucumberJavaStepDefClassIsPublicVisitor(holder);
-  }
-
-  static class CucumberJavaStepDefClassIsPublicVisitor extends JavaElementVisitor {
-    final ProblemsHolder holder;
-
-    CucumberJavaStepDefClassIsPublicVisitor(final ProblemsHolder holder) {
-      this.holder = holder;
+    public boolean isEnabledByDefault() {
+        return true;
     }
 
-    @Override
-    public void visitClass(PsiClass aClass) {
-      if (!CucumberJavaUtil.isStepDefinitionClass(aClass)) {
-        return;
-      }
+    @Nls
+    @NotNull
+    public String getDisplayName() {
+        return CucumberJavaBundle.message("cucumber.java.inspections.step.def.class.is.public.title");
+    }
 
-      if (!aClass.hasModifierProperty(PsiModifier.PUBLIC)) {
-        PsiElement elementToHighlight = aClass.getNameIdentifier();
-        if (elementToHighlight == null) {
-          elementToHighlight = aClass;
+    @NotNull
+    public String getShortName() {
+        return "CucumberJavaStepDefClassIsPublic";
+    }
+
+    @NotNull
+    public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
+        return new CucumberJavaStepDefClassIsPublicVisitor(holder);
+    }
+
+    static class CucumberJavaStepDefClassIsPublicVisitor extends JavaElementVisitor {
+        final ProblemsHolder holder;
+
+        CucumberJavaStepDefClassIsPublicVisitor(final ProblemsHolder holder) {
+            this.holder = holder;
         }
-        holder.registerProblem(elementToHighlight, CucumberJavaBundle.message("cucumber.java.inspection.step.def.class.is.public.message"));
-      }
+
+        @Override
+        public void visitClass(PsiClass aClass) {
+            if (!CucumberJavaUtil.isStepDefinitionClass(aClass)) {
+                return;
+            }
+
+            if (!aClass.hasModifierProperty(PsiModifier.PUBLIC)) {
+                PsiElement elementToHighlight = aClass.getNameIdentifier();
+                if (elementToHighlight == null) {
+                    elementToHighlight = aClass;
+                }
+                holder.registerProblem(elementToHighlight, CucumberJavaBundle.message("cucumber.java.inspection.step.def.class.is.public.message"));
+            }
+        }
     }
-  }
 }
