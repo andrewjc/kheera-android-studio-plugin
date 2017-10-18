@@ -199,7 +199,15 @@ public class CucumberStepsIndex {
         return result;
     }
 
-    public PsiFile getStepDefinitionContainer(@NotNull final GherkinFile featureFile) {
+    public PsiFile getStepDefinitionContainer(@NotNull final PsiFile featureFile) {
+        PsiClass file = getStepDefinitionContainerPsiClass(featureFile);
+        if(file != null)
+            return file.getContainingFile();
+        else
+            return null;
+    }
+
+    public PsiClass getStepDefinitionContainerPsiClass(@NotNull final PsiFile featureFile) {
 
         final Module module = ModuleUtilCore.findModuleForPsiElement(featureFile);
         if (module == null) {
@@ -236,7 +244,7 @@ public class CucumberStepsIndex {
                     }
 
                     if(m.isValid() && propValue.contentEquals(featureFile.getName())) {
-                        return moduleClass.getContainingFile();
+                        return moduleClass;
                     }
                 }
             }
