@@ -1,17 +1,13 @@
 package gherkin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static gherkin.Parser.RuleType;
 import static gherkin.Parser.TokenType;
 
 public class AstNode {
-    private final Map<RuleType, List<Object>> subItems = new HashMap<RuleType, List<Object>>();
     public final RuleType ruleType;
+    private final Map<RuleType, List<Object>> subItems = new HashMap<RuleType, List<Object>>();
 
     public AstNode(RuleType ruleType) {
         this.ruleType = ruleType;

@@ -6,17 +6,28 @@ buildscript {
 }
 
 plugins {
-    id "org.jetbrains.intellij" version "0.1.10"
+    id "org.jetbrains.intellij" version "0.2.17"
 }
 
-apply plugin: 'idea'
-apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
 
 intellij {
     version 'IC-2017.1' //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
-    pluginName 'Kheera BDD Android Support'
+    pluginName 'Kheera'
 }
 
-group 'com.github.andrewjc'
+apply plugin: 'idea'
+idea {
+    project {
+        jdkName = JAVA_VERSION
+        languageLevel = JAVA_VERSION
+        vcs = 'Git'
+    }
+    module {
+        generatedSourceDirs += file('gen')
+    }
+}
+
+group 'com.github.kheerabdd'
 version '1.0' // Plugin version

@@ -1,8 +1,8 @@
 package gherkin;
 
-import java.util.List;
-
 import gherkin.ast.Location;
+
+import java.util.List;
 
 public class Token {
     public final IGherkinLine line;

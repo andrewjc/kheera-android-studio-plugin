@@ -1,29 +1,13 @@
 package gherkin.pickles;
 
+import gherkin.SymbolCounter;
+import gherkin.ast.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import gherkin.SymbolCounter;
-import gherkin.ast.Background;
-import gherkin.ast.DataTable;
-import gherkin.ast.DocString;
-import gherkin.ast.Examples;
-import gherkin.ast.Feature;
-import gherkin.ast.GherkinDocument;
-import gherkin.ast.Location;
-import gherkin.ast.Node;
-import gherkin.ast.Scenario;
-import gherkin.ast.ScenarioDefinition;
-import gherkin.ast.ScenarioOutline;
-import gherkin.ast.Step;
-import gherkin.ast.TableCell;
-import gherkin.ast.TableRow;
-import gherkin.ast.Tag;
-
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.*;
 
 public class Compiler {
 
@@ -51,7 +35,7 @@ public class Compiler {
 
     private void compileScenario(List<Pickle> pickles, List<PickleStep> backgroundSteps, Scenario scenario, List<Tag> featureTags, String path) {
         if (scenario.getSteps().isEmpty())
-          return;
+            return;
 
         List<PickleStep> steps = new ArrayList<>();
         steps.addAll(backgroundSteps);
@@ -73,7 +57,7 @@ public class Compiler {
 
     private void compileScenarioOutline(List<Pickle> pickles, List<PickleStep> backgroundSteps, ScenarioOutline scenarioOutline, List<Tag> featureTags, String path) {
         if (scenarioOutline.getSteps().isEmpty())
-          return;
+            return;
 
         int exampleCount = 1;
         for (final Examples examples : scenarioOutline.getExamples()) {
@@ -110,7 +94,7 @@ public class Compiler {
                 }
 
                 Pickle pickle = new Pickle(
-                        interpolate(scenarioOutline.getName(), variableCells, valueCells)+ " Example No." + exampleCount++,
+                        interpolate(scenarioOutline.getName(), variableCells, valueCells) + " Example No." + exampleCount++,
                         steps,
                         pickleTags(tags, path),
                         asList(

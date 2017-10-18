@@ -1,10 +1,12 @@
 <idea-plugin>
-  <id>kheera-android-studio</id>
-  <name>Kheera BDD Support</name>
-  <version>1.0</version>
-  <vendor email="andrew.cranston@gmail.com" url="https://github.com/andrewjc/kheera-android-studio-plugin">Kheera Developers</vendor>
+    <id>kheera-android-studio</id>
+    <name>Kheera BDD Support</name>
+    <version>1.0</version>
+    <vendor email="andrew.cranston@gmail.com" url="https://github.com/andrewjc/kheera-android-studio-plugin">Kheera
+        Developers
+    </vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       This plugin enables Kheera BDD for Android support with step definitions written in Java / Espresso.
         The following coding assistance features are available:
         <ul>
@@ -20,115 +22,152 @@
         </ul>
       ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       Initial Version
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="145.0"/>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="145.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="org.jetbrains.plugins.cucumber.psi.CucumberFileTypeFactory"/>
-    <lang.syntaxHighlighterFactory language="Gherkin"
-                                   implementationClass="org.jetbrains.plugins.cucumber.psi.GherkinSyntaxHighlighterFactory"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="com.github.kheera.plugin.bdd.psi.CucumberFileTypeFactory"/>
+        <lang.syntaxHighlighterFactory language="Gherkin"
+                                       implementationClass="com.github.kheera.plugin.bdd.psi.GherkinSyntaxHighlighterFactory"/>
 
-    <lang.parserDefinition language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.psi.GherkinParserDefinition"/>
-    <lang.commenter language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.psi.GherkinCommenter"/>
-    <lang.psiStructureViewFactory language="Gherkin"
-                                  implementationClass="org.jetbrains.plugins.cucumber.psi.structure.GherkinStructureViewFactory"/>
-    <lang.formatter language="Gherkin"
-                    implementationClass="org.jetbrains.plugins.cucumber.psi.formatter.GherkinFormattingModelBuilder"/>
-    <annotator language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.psi.annotator.GherkinAnnotator"/>
-    <lang.foldingBuilder language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.psi.GherkinFoldingBuilder"/>
-    <langCodeStyleSettingsProvider
-            implementation="org.jetbrains.plugins.cucumber.psi.formatter.GherkinLanguageCodeStyleSettingsProvider"/>
-    <codeStyleSettingsProvider implementation="org.jetbrains.plugins.cucumber.psi.formatter.GherkinCodeStyleSettingsProvider"/>
+        <lang.parserDefinition language="Gherkin"
+                               implementationClass="com.github.kheera.plugin.bdd.psi.GherkinParserDefinition"/>
+        <lang.commenter language="Gherkin" implementationClass="com.github.kheera.plugin.bdd.psi.GherkinCommenter"/>
+        <lang.psiStructureViewFactory language="Gherkin"
+                                      implementationClass="com.github.kheera.plugin.bdd.psi.structure.GherkinStructureViewFactory"/>
+        <lang.formatter language="Gherkin"
+                        implementationClass="com.github.kheera.plugin.bdd.psi.formatter.GherkinFormattingModelBuilder"/>
+        <annotator language="Gherkin"
+                   implementationClass="com.github.kheera.plugin.bdd.psi.annotator.GherkinAnnotator"/>
+        <lang.foldingBuilder language="Gherkin"
+                             implementationClass="com.github.kheera.plugin.bdd.psi.GherkinFoldingBuilder"/>
+        <langCodeStyleSettingsProvider
+                implementation="com.github.kheera.plugin.bdd.psi.formatter.GherkinLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider
+                implementation="com.github.kheera.plugin.bdd.psi.formatter.GherkinCodeStyleSettingsProvider"/>
 
-    <lang.findUsagesProvider language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.psi.GherkinFindUsagesProvider"/>
-    <colorSettingsPage implementation="org.jetbrains.plugins.cucumber.psi.GherkinColorsPage"/>
+        <lang.findUsagesProvider language="Gherkin"
+                                 implementationClass="com.github.kheera.plugin.bdd.psi.GherkinFindUsagesProvider"/>
+        <colorSettingsPage implementation="com.github.kheera.plugin.bdd.psi.GherkinColorsPage"/>
 
-    <projectService serviceInterface="org.jetbrains.plugins.cucumber.steps.CucumberStepsIndex"
-                    serviceImplementation="org.jetbrains.plugins.cucumber.steps.CucumberStepsIndex"/>
-    <psi.referenceContributor  language="Gherkin"
-                               implementation="org.jetbrains.plugins.cucumber.steps.reference.CucumberReferenceContributor"/>
+        <projectService serviceInterface="com.github.kheera.plugin.bdd.steps.CucumberStepsIndex"
+                        serviceImplementation="com.github.kheera.plugin.bdd.steps.CucumberStepsIndex"/>
+        <psi.referenceContributor language="Gherkin"
+                                  implementation="com.github.kheera.plugin.bdd.steps.reference.CucumberReferenceContributor"/>
 
-    <localInspection language="Gherkin" shortName="CucumberUndefinedStep" bundle="org.jetbrains.plugins.cucumber.CucumberBundle"
-                     key="cucumber.inspection.undefined.step.name" groupKey="cucumber.inspection.group.name" enabledByDefault="true" level="WARNING"
-                     implementationClass="org.jetbrains.plugins.cucumber.inspections.CucumberStepInspection" unfair="true"/>
+        <localInspection language="Gherkin" shortName="CucumberUndefinedStep"
+                         bundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         key="cucumber.inspection.undefined.step.name" groupKey="cucumber.inspection.group.name"
+                         enabledByDefault="true" level="WARNING"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.CucumberStepInspection"
+                         unfair="true"/>
 
-    <localInspection language="Gherkin" shortName="CucumberExamplesColon" bundle="org.jetbrains.plugins.cucumber.CucumberBundle"
-                     key="inspection.missed.colon.example.name" groupKey="cucumber.inspection.group.name" enabledByDefault="true"
-                     level="ERROR" implementationClass="org.jetbrains.plugins.cucumber.inspections.CucumberExamplesColonInspection"/>
+        <localInspection language="Gherkin" shortName="CucumberExamplesColon"
+                         bundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         key="inspection.missed.colon.example.name" groupKey="cucumber.inspection.group.name"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.CucumberExamplesColonInspection"/>
 
-    <localInspection language="Gherkin" shortName="CucumberMissedExamples" bundle="org.jetbrains.plugins.cucumber.CucumberBundle"
-                     key="inspection.missed.example.name" groupKey="cucumber.inspection.group.name" enabledByDefault="true" level="ERROR"
-                     implementationClass="org.jetbrains.plugins.cucumber.inspections.CucumberMissedExamplesInspection"/>
+        <localInspection language="Gherkin" shortName="CucumberMissedExamples"
+                         bundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         key="inspection.missed.example.name" groupKey="cucumber.inspection.group.name"
+                         enabledByDefault="true" level="ERROR"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.CucumberMissedExamplesInspection"/>
 
-    <localInspection language="Gherkin" shortName="CucumberTableInspection" displayName="Unused or missing columns in Cucumber tables"
-                     groupBundle="org.jetbrains.plugins.cucumber.CucumberBundle" groupKey="cucumber.inspection.group.name" enabledByDefault="true"
-                     level="WARNING" implementationClass="org.jetbrains.plugins.cucumber.inspections.CucumberTableInspection"/>
+        <localInspection language="Gherkin" shortName="CucumberTableInspection"
+                         displayName="Unused or missing columns in Cucumber tables"
+                         groupBundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         groupKey="cucumber.inspection.group.name" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.CucumberTableInspection"/>
 
-    <localInspection  language="Gherkin" shortName="GherkinBrokenTableInspection" bundle="org.jetbrains.plugins.cucumber.CucumberBundle"
-                      key="inspection.gherkin.table.is.broken.name" groupKey="cucumber.inspection.group.name" enabledByDefault="true"
-                      level="ERROR" implementationClass="org.jetbrains.plugins.cucumber.inspections.GherkinBrokenTableInspection"/>
+        <localInspection language="Gherkin" shortName="GherkinBrokenTableInspection"
+                         bundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         key="inspection.gherkin.table.is.broken.name" groupKey="cucumber.inspection.group.name"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.GherkinBrokenTableInspection"/>
 
-    <localInspection language="Gherkin" shortName="GherkinMisplacedBackground" bundle="org.jetbrains.plugins.cucumber.CucumberBundle"
-                     key="inspection.gherkin.background.after.scenario.name" groupKey="cucumber.inspection.group.name" enabledByDefault="true"
-                     level="ERROR" implementationClass="org.jetbrains.plugins.cucumber.inspections.GherkinMisplacedBackgroundInspection"/>
+        <localInspection language="Gherkin" shortName="GherkinMisplacedBackground"
+                         bundle="com.github.kheera.plugin.bdd.CucumberBundle"
+                         key="inspection.gherkin.background.after.scenario.name"
+                         groupKey="cucumber.inspection.group.name" enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="com.github.kheera.plugin.bdd.inspections.GherkinMisplacedBackgroundInspection"/>
 
-    <completion.contributor language="Gherkin"
-                            implementationClass="org.jetbrains.plugins.cucumber.completion.CucumberCompletionContributor"/>
+        <completion.contributor language="Gherkin"
+                                implementationClass="com.github.kheera.plugin.bdd.completion.CucumberCompletionContributor"/>
 
-    <enterHandlerDelegate implementation="org.jetbrains.plugins.cucumber.codeinsight.CucumberEnterHandler"/>
-    <typedHandler implementation="org.jetbrains.plugins.cucumber.codeinsight.GherkinTypedHandler"/>
+        <enterHandlerDelegate implementation="com.github.kheera.plugin.bdd.codeinsight.CucumberEnterHandler"/>
+        <typedHandler implementation="com.github.kheera.plugin.bdd.codeinsight.GherkinTypedHandler"/>
 
-    <spellchecker.support language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.spellchecker.GherkinSpellcheckerStrategy"/>
-    <lang.inspectionSuppressor language="Gherkin" implementationClass="org.jetbrains.plugins.cucumber.inspections.model.GherkinInspectionSuppressor"/>
+        <spellchecker.support language="Gherkin"
+                              implementationClass="com.github.kheera.plugin.bdd.spellchecker.GherkinSpellcheckerStrategy"/>
+        <lang.inspectionSuppressor language="Gherkin"
+                                   implementationClass="com.github.kheera.plugin.bdd.inspections.model.GherkinInspectionSuppressor"/>
 
-    <liveTemplateContext implementation="org.jetbrains.plugins.cucumber.GherkinLiveTemplateContextType"/>
+        <liveTemplateContext implementation="com.github.kheera.plugin.bdd.GherkinLiveTemplateContextType"/>
 
-    <extendWordSelectionHandler implementation="org.jetbrains.plugins.cucumber.actions.GherkinStepParameterSelectioner"/>
+        <extendWordSelectionHandler
+                implementation="com.github.kheera.plugin.bdd.actions.GherkinStepParameterSelectioner"/>
 
-    <gotoRelatedProvider implementation="org.jetbrains.plugins.cucumber.navigation.CucumberGoToRelatedProvider"/>
+        <gotoRelatedProvider implementation="com.github.kheera.plugin.bdd.navigation.CucumberGoToRelatedProvider"/>
 
-    <renameHandler implementation="org.jetbrains.plugins.cucumber.psi.refactoring.rename.GherkinInplaceRenameHandler"/>
-    <renameHandler implementation="org.jetbrains.plugins.cucumber.psi.refactoring.rename.GherkinStepRenameHandler"/>
-
-
-    <renamePsiElementProcessor implementation="org.jetbrains.plugins.cucumber.psi.refactoring.rename.CucumberStepRenameProcessor" order="first"/>
-
-    <additionalTextAttributes scheme="Default" file="colorSchemes/GherkinDefault.xml"/>
-    <additionalTextAttributes scheme="Darcula" file="colorSchemes/GherkinDarcula.xml"/>
+        <renameHandler
+                implementation="com.github.kheera.plugin.bdd.psi.refactoring.rename.GherkinInplaceRenameHandler"/>
+        <renameHandler implementation="com.github.kheera.plugin.bdd.psi.refactoring.rename.GherkinStepRenameHandler"/>
 
 
-    <referencesSearch implementation="org.jetbrains.plugins.cucumber.java.steps.search.CucumberJavaStepDefinitionSearch"/>
-    <methodReferencesSearch implementation="org.jetbrains.plugins.cucumber.java.steps.search.CucumberJavaMethodUsageSearcher"/>
+        <renamePsiElementProcessor
+                implementation="com.github.kheera.plugin.bdd.psi.refactoring.rename.CucumberStepRenameProcessor"
+                order="first"/>
 
-    <implicitUsageProvider implementation="org.jetbrains.plugins.cucumber.java.steps.reference.CucumberJavaImplicitUsageProvider"/>
+        <additionalTextAttributes scheme="Default" file="colorSchemes/GherkinDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/GherkinDarcula.xml"/>
 
-    <localInspection language="JAVA" shortName="CucumberJavaStepDefClassIsPublic" displayName="Step definition class is not public"
-                     groupBundle="org.jetbrains.plugins.cucumber.java.CucumberJavaBundle" groupKey="cucumber.java.inspection.group.name" enabledByDefault="true"
-                     level="WARNING" implementationClass="org.jetbrains.plugins.cucumber.java.inspections.CucumberJavaStepDefClassIsPublicInspections"/>
-    <localInspection language="JAVA" shortName="CucumberJavaStepDefClassInDefaultPackage" displayName="Step definition class is in default package"
-                     groupBundle="org.jetbrains.plugins.cucumber.java.CucumberJavaBundle" groupKey="cucumber.java.inspection.group.name" enabledByDefault="true"
-                     level="WARNING" implementationClass="org.jetbrains.plugins.cucumber.java.inspections.CucumberJavaStepDefClassInDefaultPackageInspection"/>
 
-    <multiHostInjector implementation="org.jetbrains.plugins.cucumber.java.CucumberJavaInjector"/>
+        <referencesSearch
+                implementation="com.github.kheera.plugin.bdd.java.steps.search.CucumberJavaStepDefinitionSearch"/>
+        <methodReferencesSearch
+                implementation="com.github.kheera.plugin.bdd.java.steps.search.CucumberJavaMethodUsageSearcher"/>
 
-  </extensions>
+        <implicitUsageProvider
+                implementation="com.github.kheera.plugin.bdd.java.steps.reference.CucumberJavaImplicitUsageProvider"/>
 
-  <extensionPoints>
-    <extensionPoint qualifiedName="org.jetbrains.plugins.cucumber.steps.cucumberJvmExtensionPoint"
-                    interface="org.jetbrains.plugins.cucumber.CucumberJvmExtensionPoint"/>
-  </extensionPoints>
-  <extensions defaultExtensionNs="org.jetbrains.plugins.cucumber.steps">
-    <cucumberJvmExtensionPoint implementation="org.jetbrains.plugins.cucumber.java.CucumberJavaExtension"/>
-  </extensions>
+        <localInspection language="JAVA" shortName="CucumberJavaStepDefClassIsPublic"
+                         displayName="Step definition class is not public"
+                         groupBundle="com.github.kheera.plugin.bdd.java.CucumberJavaBundle"
+                         groupKey="cucumber.java.inspection.group.name" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="com.github.kheera.plugin.bdd.java.inspections.CucumberJavaStepDefClassIsPublicInspections"/>
+        <localInspection language="JAVA" shortName="CucumberJavaStepDefClassInDefaultPackage"
+                         displayName="Step definition class is in default package"
+                         groupBundle="com.github.kheera.plugin.bdd.java.CucumberJavaBundle"
+                         groupKey="cucumber.java.inspection.group.name" enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="com.github.kheera.plugin.bdd.java.inspections.CucumberJavaStepDefClassInDefaultPackageInspection"/>
+
+        <multiHostInjector implementation="com.github.kheera.plugin.bdd.java.CucumberJavaInjector"/>
+
+    </extensions>
+
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.github.kheera.plugin.bdd.steps.cucumberJvmExtensionPoint"
+                        interface="com.github.kheera.plugin.bdd.CucumberJvmExtensionPoint"/>
+    </extensionPoints>
+    <extensions defaultExtensionNs="com.github.kheera.plugin.bdd.steps">
+        <cucumberJvmExtensionPoint implementation="com.github.kheera.plugin.bdd.java.CucumberJavaExtension"/>
+    </extensions>
 </idea-plugin>

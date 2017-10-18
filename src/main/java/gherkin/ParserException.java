@@ -1,9 +1,9 @@
 package gherkin;
 
+import gherkin.ast.Location;
+
 import java.util.Collections;
 import java.util.List;
-
-import gherkin.ast.Location;
 
 public class ParserException extends RuntimeException {
     public final Location location;
@@ -35,10 +35,9 @@ public class ParserException extends RuntimeException {
     }
 
     public static class UnexpectedTokenException extends ParserException {
-        public String stateComment;
-
         public final Token receivedToken;
         public final List<String> expectedTokenTypes;
+        public String stateComment;
 
         public UnexpectedTokenException(Token receivedToken, List<String> expectedTokenTypes, String stateComment) {
             super(getMessage(receivedToken, expectedTokenTypes), getLocation(receivedToken));
@@ -54,9 +53,9 @@ public class ParserException extends RuntimeException {
         }
 
         private static Location getLocation(Token receivedToken) {
-            return receivedToken.location.getColumn() > 1 
-                ? receivedToken.location
-                : new Location(receivedToken.location.getLine(), receivedToken.line.indent() + 1);
+            return receivedToken.location.getColumn() > 1
+                    ? receivedToken.location
+                    : new Location(receivedToken.location.getLine(), receivedToken.line.indent() + 1);
         }
     }
 

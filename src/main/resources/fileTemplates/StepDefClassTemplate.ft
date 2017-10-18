@@ -1,0 +1,39 @@
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "")package ${PACKAGE_NAME};#end
+
+#parse("File Header.java")
+
+import com.kheera.annotations.OnFinishTest;
+import com.kheera.annotations.OnStartTest;
+import com.kheera.annotations.RetainAcrossTests;
+import com.kheera.annotations.TestModule;
+import com.kheera.annotations.TestStep;
+import com.kheera.internal.StepDefinition;
+import com.kheera.internal.TestRunnerConfig;
+
+import android.content.Context;
+import android.os.Build;
+import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.intent.Intents;
+import android.util.Log;
+
+@TestModule(featureFile="${Feature_File_Name}")
+public class ${Class_Name} implements StepDefinition {
+
+    @Override
+    public void onCreate(Context context, TestRunnerConfig runnerConfig) {
+        this.context = context;
+        this.runnerConfig = runnerConfig;
+    }
+
+    @OnStartTest()
+    public void onStartTest(String featureName, String scenarioName) {
+        Log.v(runnerConfig.LogTag, "Starting Test: " + featureName + " - " + scenarioName);
+    }
+
+    @OnFinishTest()
+    public void onFinishTest(String featureName, String scenarioName) {
+        Log.v(runnerConfig.LogTag, "Finished Test: " + featureName + " - " + scenarioName);
+        getInstrumentation().waitForIdleSync();
+    }
+
+}
